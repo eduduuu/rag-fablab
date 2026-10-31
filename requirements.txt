@@ -1,0 +1,13 @@
+# Web Framework & Server
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+google-genai
+
+# Vector DB & Embeddings
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+
+# PDF Extraction
+pypdf>=4.0.0

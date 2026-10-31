@@ -1,0 +1,56 @@
+services:
+
+  chromadb:
+    image: chromadb/chroma:latest
+
+    container_name: chromadb
+
+    ports:
+      - "8006:8000"
+    
+    networks:
+      - chatbot_service
+
+    volumes:
+      - chroma_data:/chroma/chroma
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: chatbot_db
+      MYSQL_USER: chatbot_user
+      MYSQL_PASSWORD: chatbot_password
+    ports:
+      - "3308:3306"
+    networks:
+      - chatbot_service
+  
+  chatbot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: chatbot
+    ports:
+      - "5000:5000"
+    env_file:
+      - ../.env
+    environment:
+      CHROMA_HOST: chromadb
+      CHROMA_PORT: "8000"
+    volumes:
+      - ../data:/app/data
+
+    networks:
+      - chatbot_service
+      
+    depends_on:
+      - chromadb
+
+volumes:
+  chroma_data:
+
+networks:
+  chatbot_service:
+    driver: bridge
